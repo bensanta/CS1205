@@ -4,6 +4,7 @@
 # Q1: BMI Calculations
 
 
+# noinspection DuplicatedCode
 def BMI_Risk_Factor(height, weight):
     # calculate bmi formulae: kg/m^2 - https://www.diabetes.ca/resources/tools-resources/body-mass-index-(bmi)-calculator
     # Example
