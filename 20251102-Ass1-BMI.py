@@ -26,7 +26,7 @@ def calculateBMI(height, weight):
     # Example
     # height: 1.80 -> 180cm / 1.8m
     # weight: 75 -> 75kg
-    return weight / (height ** 2)
+    return float(weight / (height ** 2))
 
 # ToDO Thorough Testing on BMI Calc
 
@@ -135,6 +135,13 @@ def bmiRiskFactor(bmi):
 """
 Question 4: Imperial BMI Classification
 
+            Finally, define and test a function in Python that takes the height and weight of a person
+            (in Imperial scale) and returns the weight classification of that person, BY CALLING
+            YOUR FUNCTIONS ABOVE to convert height and weight to metric, calculate BMI and
+            give weight classification as a result.
+            
+            Example: Say your function prototype is:
+            patient_weight_classification (feet, inches, stones, pounds).
 """
 
 #TODO: get parameters input of (ft, in, st, lb)
@@ -142,3 +149,13 @@ Question 4: Imperial BMI Classification
 #TODO: then use the conversion function and be like weight=weightToMetric(st, lb)
 #TODO: pass all values through calculateBMI(height, weight) -> calculateBMI(heightToMetric(ft, in), weightToMetric(st, lb))
 #TODO: Pass BMI through bmiRiskFactor(bmi) -> bmiRiskFactor(calculateBMI(heightToMetric(ft, in), weightToMetric(st, lb)))
+
+def patientWeightClassification (feet, inches, stones, pounds):
+
+    # TODO: add in some error handling - same logic as before for inches and pounds
+    return bmiRiskFactor(calculateBMI(heightToMetric(feet, inches), weightToMetric(stones, pounds)))
+
+#TODO: test thoroughly - all edge cases, and all fails too.
+
+print("\nQuestion 4:")
+print(patientWeightClassification(5, 10, 11.4286, 0))
