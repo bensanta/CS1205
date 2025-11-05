@@ -237,12 +237,6 @@ Question 4: Imperial BMI Classification
             patient_weight_classification (feet, inches, stones, pounds).
 """
 
-#TODO: get parameters input of (ft, in, st, lb)
-#TODO: then use the conversion function and be like height=heightToMetric(ft, in)
-#TODO: then use the conversion function and be like weight=weightToMetric(st, lb)
-#TODO: pass all values through calculateBMI(height, weight) -> calculateBMI(heightToMetric(ft, in), weightToMetric(st, lb))
-#TODO: Pass BMI through bmiRiskFactor(bmi) -> bmiRiskFactor(calculateBMI(heightToMetric(ft, in), weightToMetric(st, lb)))
-
 def patientWeightClassification (feet, inches, stones, pounds):
 
     # Boundaries - no negative values
