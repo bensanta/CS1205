@@ -34,8 +34,8 @@ def calculateBMI(height, weight):
 
     return float(weight / (height ** 2)) #for some reason has to be typecast. it kicked up a fuss without the casting in Q4
 
-# ToDO Thorough Testing on BMI Calc
-print("\n\nQuestion 1: BMI Calculations")
+
+print("-------------\n-------------\nQuestion 1: BMI Calculations")
 
 # --- Tests with expected BMI values ---
 print(calculateBMI(1.3, 9))        # expect: 5.3290705182
@@ -73,7 +73,7 @@ def heightToMetric(feet, inches):
 
 # TODO: the height conversion as much as possible
 
-print("-------------\n-------------\nQuestion 2.1: Imperial Height to Metric Tests")
+print("\n-------------\n-------------\nQuestion 2.1: Imperial Height to Metric Tests")
 
 print(heightToMetric(6, 20))    # Returns the error
 print(heightToMetric(6, 1))     # valid
@@ -114,7 +114,7 @@ def weightToMetric(stones, pounds):
 
 # TODO: the weight conversion as much as possible
 # --- Tests ---
-print("-------------\n-------------\nQuestion 2.2: Imperial Weight to Metric Tests")
+print("\n-------------\n-------------\nQuestion 2.2: Imperial Weight to Metric Tests")
 
 print(weightToMetric(0, 0))         # expect: 0.0
 print(weightToMetric(0, 13))        # expect: 5.8967008101304605
@@ -189,7 +189,32 @@ def bmiRiskFactor(bmi):
 
 
 
-# ToDo - testing of all 6 categories AND the boundaries, for example bmi=40 and bmi=25 and bmi=18.5 and bmi=18.49
+print("\n-------------\n-------------\nQuestion 3: BMI Risk Factor Tests")
+
+# UNDERWEIGHT (<18.5)
+print(bmiRiskFactor(18.49))   # Edge just below normal
+print(bmiRiskFactor(10))      # Deep in underweight range
+
+# NORMAL (18.5–24.9)
+print(bmiRiskFactor(18.5))    # Lower boundary
+print(bmiRiskFactor(24.99))   # Upper boundary
+
+# OVERWEIGHT (25–29.9)
+print(bmiRiskFactor(25))      # Lower boundary
+print(bmiRiskFactor(29.99))   # Upper boundary
+
+# OBESE CLASS I (30–34.9)
+print(bmiRiskFactor(30))      # Lower boundary
+print(bmiRiskFactor(34.99))   # Upper boundary
+
+# OBESE CLASS II (35–39.9)
+print(bmiRiskFactor(35))      # Lower boundary
+print(bmiRiskFactor(39.99))   # Upper boundary
+
+# OBESE CLASS III (≥40)
+print(bmiRiskFactor(40))      # Exact boundary
+print(bmiRiskFactor(60))      # Deep in obese class III range
+
 
 # Testing output of all 6 categories
 # print(bmiRiskFactor(calculateBMI(1.8, 50)))
@@ -220,11 +245,77 @@ Question 4: Imperial BMI Classification
 
 def patientWeightClassification (feet, inches, stones, pounds):
 
+    # Boundaries - no negative values
+    if feet < 0 or inches < 0:
+        return f"ERROR: {'FEET' if feet < 0 else ''}{' and ' if feet < 0 and inches < 0 else ''}{'INCHES' if inches < 0 else ''} should not be below 0, as negative height is not possible."
+    elif stones < 0 or pounds < 0:
+        return f"ERROR: {'STONES' if stones < 0 else ''}{' and ' if stones < 0 and pounds < 0 else ''}{'POUNDS' if pounds < 0 else ''} should not be below 0, as negative weight is not possible."
 
-    # TODO: add in some error handling - same logic as before for inches and pounds
+    #Boundaries for the range of acceptable inches, and range of acceptable pounds
+    if inches < 0 or inches >= 12: # because 12 inches is a whole new feet
+        return f"ERROR: You entered {inches} inches. Please enter a value between 0 and <12 inches. 12 inches is a whole new feet."
+    if pounds < 0 or pounds >= 14:
+        return f"ERROR: You entered {pounds} pounds. Please enter a value between 0 and 13 pounds."
+
     return bmiRiskFactor(calculateBMI(heightToMetric(feet, inches), weightToMetric(stones, pounds)))
 
-#TODO: test thoroughly - all edge cases, and all fails too.
+#TODO: test thoroughly - all edge cases, and all fails / errors too.
 
 print("\nQuestion 4:")
 print(patientWeightClassification(5, 10, 11.4286, 0))
+
+
+print("\n-------------\n-------------\nQuestion 4: patientWeightClassification tests")
+
+# ------- Happy-path classification checks at 6'0" (1.8288 m) -------
+# BMI thresholds for 6'0":
+# 18.5→ 9.7434 st, 25→ 13.1668 st, 30→ 15.8001 st, 35→ 18.4335 st, 40→ 21.0668 st
+
+# Underweight (<18.5)
+print(patientWeightClassification(6, 0, 9.70, 0))         # expect: underweight / increased risk
+
+# Normal (==18.5 lower edge, and <25 upper edge)
+print(patientWeightClassification(6, 0, 9.7434, 0))       # expect: normal weight / less risk (edge at 18.5)
+print(patientWeightClassification(6, 0, 13.15, 0))        # expect: normal weight / less risk (just below 25)
+
+# Overweight (==25 lower edge, and <30 upper edge)
+print(patientWeightClassification(6, 0, 13.1668, 0))      # expect: overweight / increased risk (edge at 25)
+print(patientWeightClassification(6, 0, 15.78, 0))        # expect: overweight / increased risk (just below 30)
+
+# Obese class I (==30 lower edge, and <35 upper edge)
+print(patientWeightClassification(6, 0, 15.8001, 0))      # expect: obese class I / high risk (edge at 30)
+print(patientWeightClassification(6, 0, 18.41, 0))        # expect: obese class I / high risk (just below 35)
+
+# Obese class II (==35 lower edge, and <40 upper edge)
+print(patientWeightClassification(6, 0, 18.4335, 0))      # expect: obese class II / very high risk (edge at 35)
+print(patientWeightClassification(6, 0, 21.04, 0))        # expect: obese class II / very high risk (just below 40)
+
+# Obese class III (>=40)
+print(patientWeightClassification(6, 0, 21.0668, 0))      # expect: obese class III / extremely high risk (edge at 40)
+print(patientWeightClassification(6, 0, 23.0, 0))         # expect: obese class III / extremely high risk
+
+# ------- Pounds boundary checks (this function validates 0..13) -------
+print(patientWeightClassification(6, 0, 10, -1))          # expect: "POUNDS ERROR"
+print(patientWeightClassification(6, 0, 10, 0))           # expect: valid call
+print(patientWeightClassification(6, 0, 10, 13))          # expect: valid call
+print(patientWeightClassification(6, 0, 10, 14))          # expect: "POUNDS RANGE Error: 0 and 13 pounds."
+
+# ------- Height negativity checks (this function validates negatives) -------
+print(patientWeightClassification(-1, 5, 10, 0))          # expect: "Negative FEET ERROR"
+print(patientWeightClassification(5, -1, 10, 0))          # expect: "Negative INCHES ERROR"
+print(patientWeightClassification(-1, -1, 10, 0))         # expect: "FEET and INCHES ERROR"
+
+# ------- Weight negativity checks (this function validates negatives) -------
+print(patientWeightClassification(5, 10, -1, 0))          # expect: "STONES ERROR"
+print(patientWeightClassification(5, 10, 0, -1))          # expect: "POUNDS ERROR"
+print(patientWeightClassification(5, 10, -1, -1))         # expect: "STONES and POUNDS ERROR"
+
+# Out of bounds inches check
+print(patientWeightClassification(5, 12, 10, 0))          # expect: INCHES Error msg
+
+# ------- Fractional inches/pounds accepted -------
+print(patientWeightClassification(5, 11.5, 12, 6.5))      # expect: valid classification
+
+# ------- Extreme but valid inputs -------
+print(patientWeightClassification(7, 0, 7.5, 0))          # tall, light → likely underweight/normal
+print(patientWeightClassification(4, 11, 25, 13))         # short, very heavy → likely obese class III
