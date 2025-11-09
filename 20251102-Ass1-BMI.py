@@ -1,7 +1,7 @@
 """
 Assignment 1
 CS1205 UCC AY2025
-@author Benjamin Santa
+@author BSanta
 Assignment Link: https://ucc.instructure.com/courses/83383/files/9598932?wrap=1
 """
 
@@ -251,6 +251,8 @@ def patientWeightClassification (feet, inches, stones, pounds):
     if pounds < 0 or pounds >= 14:
         return f"ERROR: You entered {pounds} pounds. Please enter a value between 0 and 13 pounds."
 
+
+    # TODO explain how this return works
     return bmiRiskFactor(calculateBMI(heightToMetric(feet, inches), weightToMetric(stones, pounds)))
 
 #TODO: test thoroughly - all edge cases, and all fails / errors too.
@@ -260,10 +262,6 @@ print(patientWeightClassification(5, 10, 11.4286, 0))
 
 
 print("\n-------------\n-------------\nQuestion 4: patientWeightClassification tests")
-
-# ------- Happy-path classification checks at 6'0" (1.8288 m) -------
-# BMI thresholds for 6'0":
-# 18.5→ 9.7434 st, 25→ 13.1668 st, 30→ 15.8001 st, 35→ 18.4335 st, 40→ 21.0668 st
 
 # Underweight (<18.5)
 print(patientWeightClassification(6, 0, 9.70, 0))         # expect: underweight / increased risk
@@ -313,3 +311,7 @@ print(patientWeightClassification(5, 11.5, 12, 6.5))      # expect: valid classi
 # ------- Extreme but valid inputs -------
 print(patientWeightClassification(7, 0, 7.5, 0))          # tall, light → likely underweight/normal
 print(patientWeightClassification(4, 11, 25, 13))         # short, very heavy → likely obese class III
+print(patientWeightClassification(5, 2, 9, 12))         # short, very heavy → likely obese class III
+
+
+#TODO Add an AI declaration for all the test cases

@@ -141,3 +141,57 @@ print(addToXEven(13))
 print(addToXEven(14))
 print(addToXEven(15))
 print(addToXEven(16))
+
+
+#Rachel Help
+
+def calculateBMI(kg, meter):
+    return (kg/(meter)**2)
+
+print(calculateBMI(63,1.57))
+
+print(5/3.281)
+print(2/39.37)
+
+def HeightConversion (feet, inches):
+    return (feet/3.281)+ (inches/39.37)
+
+print(HeightConversion(5, 2))
+
+def WeightConversion (stones, lbs):
+    return (stones*6.35)+ (lbs/2.205)
+
+
+def WeightClassification (bmi):
+    classification=""
+
+    if bmi<18.5:
+        classification= "underweight"
+    elif bmi >=18.5 and bmi<25.0:
+        classification="healthy weight"
+    elif bmi>=25.0 and bmi<30.0:
+        classification="overweight"
+    elif bmi>=30.0 and bmi<35.0:
+        classification="obesity I"
+    elif bmi>=35.0 and bmi<40:
+        classification="obesity II"
+    elif bmi>=40:
+        classification="obesity III"
+
+    return classification
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
