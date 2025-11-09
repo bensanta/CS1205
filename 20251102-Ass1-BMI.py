@@ -21,6 +21,20 @@ Question 1: BMI (Body Mass Index) Calculator
             Write code in your main program to properly test your function with preset variables in
             the main program.
 """
+
+# TODO: add error handling return codes
+
+"""
+Error codes and meanings:
+10001: Negative Height
+10002: Negative Weight
+10003: Negative Height AND Weight
+10004: Invalid BMI
+"""
+
+
+# TODO: allow inches over 12, and allow lbs over 14. no reason to complicate further.
+
 def calculateBMI(height, weight):
     # calculate bmi formulae: kg/m^2 - https://www.diabetes.ca/resources/tools-resources/body-mass-index-(bmi)-calculator
     # Example
@@ -28,9 +42,12 @@ def calculateBMI(height, weight):
     # weight: 75 -> 75kg
 
     #ERROR HANDLING
-    if height < 0 or weight < 0:
-        #f-string with if...else - https://www.w3schools.com/python/python_string_formatting.asp
-        return f"{'HEIGHT' if height < 0 else ''}{' and ' if height < 0 and weight < 0 else ''}{'WEIGHT' if weight < 0 else ''} should not be below 0"
+    if height < 0 and weight < 0:
+        return 10003
+    elif height < 0:
+        return 10001
+    elif weight < 0:
+        return 10002
 
     return float(weight / (height ** 2)) #for some reason has to be typecast. it kicked up a fuss without the casting in Q4
 
@@ -38,18 +55,12 @@ def calculateBMI(height, weight):
 print("-------------\n-------------\nQuestion 1: BMI Calculations")
 
 # --- Tests with expected BMI values ---
+print(calculateBMI(-1.3, 9))        # expect: ERR 10001
+print(calculateBMI(1.3, -9))        # expect: ERR 10002
+print(calculateBMI(-1.3, -9))        # expect: ERR 10003
 print(calculateBMI(1.3, 9))        # expect: 5.3290705182
 print(calculateBMI(1.80, 75))      # expect: 23.1481481481
-print(calculateBMI(1.0, 1))        # expect: 1.0
-print(calculateBMI(2.5, 50))       # expect: 8.0
-print(calculateBMI(1.75, 0))       # expect: 0.0
-print(calculateBMI(0.5, 10))       # expect: 40.0
-print(calculateBMI(0.001, 60))     # expect: 60000000.0
 
-# --- Error handling tests ---
-print(calculateBMI(-1.75, 70))     # expect: "HEIGHT should not be below 0"
-print(calculateBMI(1.75, -70))     # expect: "WEIGHT should not be below 0"
-print(calculateBMI(-1.75, -70))    # expect: "HEIGHT and WEIGHT should not be below 0"
 
 """
 Question 2: Imperial to Metric Conversion
@@ -62,50 +73,29 @@ Question 2: Imperial to Metric Conversion
 """
 
 def heightToMetric(feet, inches):
-    # BOUNDARIES: inches > 12 - https://www.rapidtables.com/convert/length/inch-to-feet.html
-    if inches < 0 or inches >= 12: # because 12 inches is a whole new feet
-        return f"ERROR: You entered {inches} inches. Please enter a value between 0 and <12 inches. 12 inches is a whole new feet."
-    elif feet < 0: #negative stones not realistic
-        return f"ERROR: You entered {feet} feet. Please enter a positive value of feet in length, as it's not possible to have negative length."
+
+    if ((feet / 3.281) + (inches / 39.37)) < 0:
+        return 10001
 
     # Conversion
     return (feet / 3.281) + (inches / 39.37)
 
-# TODO: the height conversion as much as possible
 
 print("\n-------------\n-------------\nQuestion 2.1: Imperial Height to Metric Tests")
 
 print(heightToMetric(6, 20))    # Returns the error
 print(heightToMetric(6, 1))     # valid
-print(heightToMetric(9, 10))    # valid
-print(heightToMetric(5, 5))     # valid
-print(heightToMetric(5, 14))    # inches > 12 -> Returns the error
-print(heightToMetric(5, -15))    # negative inches -> Returns the error
-print(heightToMetric(5, 8))     # valid
-print(heightToMetric(6, 2))     # valid
-
-print(heightToMetric(5, 12))     # inches == 12 -> ERROR - 12 inches is a whole new feet
-print(heightToMetric(5, 13))     # inches more than 12 -> ERROR
-
-print(heightToMetric(-1, 5))     # negative feet -> ERROR
-print(heightToMetric(5, -1))     # negative inches -> ERROR
-
-print(heightToMetric(5.5, 0))    # valid - fractional feet -> expect 1.676
-print(heightToMetric(0, 5.5))    # valid - fractional inches -> expect 0.140
-
-print(heightToMetric(0, 0))      # valid - zero height -> expect 0.0
-print(heightToMetric(0, 11.99))  # valid - edge of inch range -> expect 0.305
-
-
+print(heightToMetric(-6, 1))     # err
+print(heightToMetric(-6, -1))     # err
+print(heightToMetric(6, -1))     # valid
+print(heightToMetric(6, -100))     # err
 
 
 
 def weightToMetric(stones, pounds):
-    # BOUNDARIES: There are only 14 pounds in a stone - https://stone-synergy.co.uk/how-many-pounds-in-a-stone/
-    if pounds < 0 or pounds >= 14:
-        return f"ERROR: You entered {pounds} pounds. Please enter a value between 0 and 13 pounds."
-    elif stones < 0: #negative stones not realistic
-        return f"ERROR: You entered {stones} stones. Please enter a positive value of stones in weight, as it's not possible to have negative weight."
+
+    if ((stones * 6.35029318) + (pounds / 2.2046226218)) < 0:
+        return 10002
 
     #To counteract the rounding issue
     # Exact values from https://www.unitconverters.net/weight-and-mass/lbs-to-kg.htm
@@ -116,31 +106,14 @@ def weightToMetric(stones, pounds):
 # --- Tests ---
 print("\n-------------\n-------------\nQuestion 2.2: Imperial Weight to Metric Tests")
 
-print(weightToMetric(0, 0))         # expect: 0.0
-print(weightToMetric(0, 13))        # expect: 5.8967008101304605
-print(weightToMetric(0, -1))         # expect: return weight error for negative pounds
-print(weightToMetric(0, 14))        # expect: return weight error for pounds over 13 -> 14 pounds makes a new stone
-
-print(weightToMetric(1, 0))         # expect: 6.35029318
-print(weightToMetric(1, 7))         # expect: 9.52543
-print(weightToMetric(2, 13))        # expect: 18.5972
-
-print(weightToMetric(11, 0))        # expect: 69.8532
-print(weightToMetric(11, 3))        # expect: 71.214
-print(weightToMetric(15, 13))       # expect: 101.1510
-print(weightToMetric(100, 0))       # expect: 635.029318
-
-# Negative stones now trigger
-print(weightToMetric(-1, 5))           # expect: "ERROR: You entered -1 stones. Please enter a positive value of stones in weight, as it's not possible to have negative weight."
-
-# --- Fractional values for stones and pounds --- -> it was never said stones or MUST be an integer. therefore decimals must be tested
-print(weightToMetric(0.5, 0))          # expect: 3.17514
-print(weightToMetric(0.25, 7))         # expect: 4.9002
-print(weightToMetric(1.5, 0))          # expect: 9.5254
-print(weightToMetric(2.5, 3.5))        # expect: 16.2613
-print(weightToMetric(7.25, 6.5))       # expect: 47.0352
-print(weightToMetric(0.75, 13.25))     # expect: 10.0293
-print(weightToMetric(10.5, 13.9))      # expect: 71.3857
+print(weightToMetric(0, 0)) # expect: 0.0
+print(weightToMetric(1,-15)) #err
+print(weightToMetric(-1,15)) #valid
+print(weightToMetric(-10,15)) #err
+print(weightToMetric(-1,-15)) #err
+print(weightToMetric(1,15)) #valid -> no reason to limit pounds to only 1->14
+print(weightToMetric(13,10)) #valid
+print(weightToMetric(13,30)) #valid
 
 
 
@@ -164,8 +137,18 @@ def bmiRiskFactor(bmi):
     classification = ""
     health_problems_risk = ""
 
+    #ERR Handling
+    if bmi == 10001:
+        return 10001
+    elif bmi == 10002:
+        return 10002
+    elif bmi == 10003:
+        return 10003
+
     # these classifications are from the above linked assignment
-    if bmi < 18.5:
+    if bmi <= 0:
+        return 10004
+    elif bmi > 0 and bmi < 18.5:
         classification = "underweight"
         health_problems_risk = "increased"
     elif bmi >= 18.5 and bmi < 25:
@@ -180,49 +163,48 @@ def bmiRiskFactor(bmi):
     elif bmi >= 35 and bmi < 40:
         classification = "obese class II"
         health_problems_risk = "very high"
-    else:
+    else: #todo: add error codes into here, specific == like bmi == 10001 then height err, etc
         classification = "obese class III"
         health_problems_risk = "extremely high"
 
-    # Print an output for the user - using f-string to make it more elegant - https://www.w3schools.com/python/python_string_formatting.asp
-    return f"With a BMI of {round(bmi,2)} you are {classification} with {health_problems_risk} risk of developing health problems."
+    # Print an output for the user - using f-string to make it more elegant -
+    # https://www.w3schools.com/python/python_string_formatting.asp
+    return (f"With a BMI of {round(bmi,2)} you are {classification} with {health_problems_risk} risk of developing "
+            f"health problems.")
 
 
 
 print("\n-------------\n-------------\nQuestion 3: BMI Risk Factor Tests")
 
+print(bmiRiskFactor(0)) #ERR
+print(bmiRiskFactor(-1)) #ERR
+
 # UNDERWEIGHT (<18.5)
-print(bmiRiskFactor(18.49))   # Edge just below normal
-print(bmiRiskFactor(10))      # Deep in underweight range
+print(bmiRiskFactor(0.1)) #valid, technically underweight
+print(bmiRiskFactor(18.49))
+print(bmiRiskFactor(10))
 
 # NORMAL (18.5–24.9)
-print(bmiRiskFactor(18.5))    # Lower boundary
-print(bmiRiskFactor(24.99))   # Upper boundary
+print(bmiRiskFactor(18.5))
+print(bmiRiskFactor(24.99))
 
 # OVERWEIGHT (25–29.9)
-print(bmiRiskFactor(25))      # Lower boundary
-print(bmiRiskFactor(29.99))   # Upper boundary
+print(bmiRiskFactor(25))
+print(bmiRiskFactor(29.99))
 
 # OBESE CLASS I (30–34.9)
-print(bmiRiskFactor(30))      # Lower boundary
-print(bmiRiskFactor(34.99))   # Upper boundary
+print(bmiRiskFactor(30))
+print(bmiRiskFactor(34.99))
 
 # OBESE CLASS II (35–39.9)
-print(bmiRiskFactor(35))      # Lower boundary
-print(bmiRiskFactor(39.99))   # Upper boundary
+print(bmiRiskFactor(35))
+print(bmiRiskFactor(39.99))
 
 # OBESE CLASS III (≥40)
-print(bmiRiskFactor(40))      # Exact boundary
-print(bmiRiskFactor(60))      # Deep in obese class III range
+print(bmiRiskFactor(40))
+print(bmiRiskFactor(60))
 
 
-# Testing output of all 6 categories
-# print(bmiRiskFactor(calculateBMI(1.8, 50)))
-# print(bmiRiskFactor(calculateBMI(1.8, 70)))
-# print(bmiRiskFactor(calculateBMI(1.8, 90)))
-# print(bmiRiskFactor(calculateBMI(1.8, 100)))
-# print(bmiRiskFactor(calculateBMI(1.8, 120)))
-# print(bmiRiskFactor(calculateBMI(1.8, 130)))
 
 
 """
@@ -239,17 +221,21 @@ Question 4: Imperial BMI Classification
 
 def patientWeightClassification (feet, inches, stones, pounds):
 
-    # Boundaries - no negative values
-    if feet < 0 or inches < 0:
-        return f"ERROR: {'FEET' if feet < 0 else ''}{' and ' if feet < 0 and inches < 0 else ''}{'INCHES' if inches < 0 else ''} should not be below 0, as negative height is not possible."
-    elif stones < 0 or pounds < 0:
-        return f"ERROR: {'STONES' if stones < 0 else ''}{' and ' if stones < 0 and pounds < 0 else ''}{'POUNDS' if pounds < 0 else ''} should not be below 0, as negative weight is not possible."
+    # needed for the err handling calcs - additions have to be done, because technically -1 foot but 15 inches could
+    # still work
 
-    #Boundaries for the range of acceptable inches, and range of acceptable pounds
-    if inches < 0 or inches >= 12: # because 12 inches is a whole new feet
-        return f"ERROR: You entered {inches} inches. Please enter a value between 0 and <12 inches. 12 inches is a whole new feet."
-    if pounds < 0 or pounds >= 14:
-        return f"ERROR: You entered {pounds} pounds. Please enter a value between 0 and 13 pounds."
+    height = (feet / 3.281) + (inches / 39.37)
+    weight = (stones * 6.35029318) + (pounds / 2.2046226218)
+
+    #ERROR HANDLING
+    if calculateBMI(height, weight) < 0: #error handle for BMI specifically
+        return 10004
+    elif height < 0 and weight < 0:
+        return 10003
+    elif height < 0:
+        return 10001
+    elif weight < 0:
+        return 10002
 
 
     # TODO explain how this return works
@@ -257,11 +243,12 @@ def patientWeightClassification (feet, inches, stones, pounds):
 
 #TODO: test thoroughly - all edge cases, and all fails / errors too.
 
-print("\nQuestion 4:")
-print(patientWeightClassification(5, 10, 11.4286, 0))
-
-
 print("\n-------------\n-------------\nQuestion 4: patientWeightClassification tests")
+
+#ERRs
+print(patientWeightClassification(-10,10,-3,2))
+print(patientWeightClassification(10,10,-3,2))
+print(patientWeightClassification(-10,10,3,2))
 
 # Underweight (<18.5)
 print(patientWeightClassification(6, 0, 9.70, 0))         # expect: underweight / increased risk
@@ -286,32 +273,4 @@ print(patientWeightClassification(6, 0, 21.04, 0))        # expect: obese class 
 print(patientWeightClassification(6, 0, 21.0668, 0))      # expect: obese class III / extremely high risk (edge at 40)
 print(patientWeightClassification(6, 0, 23.0, 0))         # expect: obese class III / extremely high risk
 
-# ------- Pounds boundary checks (this function validates 0..13) -------
-print(patientWeightClassification(6, 0, 10, -1))          # expect: "POUNDS ERROR"
-print(patientWeightClassification(6, 0, 10, 0))           # expect: valid call
-print(patientWeightClassification(6, 0, 10, 13))          # expect: valid call
-print(patientWeightClassification(6, 0, 10, 14))          # expect: "POUNDS RANGE Error: 0 and 13 pounds."
 
-# ------- Height negativity checks (this function validates negatives) -------
-print(patientWeightClassification(-1, 5, 10, 0))          # expect: "Negative FEET ERROR"
-print(patientWeightClassification(5, -1, 10, 0))          # expect: "Negative INCHES ERROR"
-print(patientWeightClassification(-1, -1, 10, 0))         # expect: "FEET and INCHES ERROR"
-
-# ------- Weight negativity checks (this function validates negatives) -------
-print(patientWeightClassification(5, 10, -1, 0))          # expect: "STONES ERROR"
-print(patientWeightClassification(5, 10, 0, -1))          # expect: "POUNDS ERROR"
-print(patientWeightClassification(5, 10, -1, -1))         # expect: "STONES and POUNDS ERROR"
-
-# Out of bounds inches check
-print(patientWeightClassification(5, 12, 10, 0))          # expect: INCHES Error msg
-
-# ------- Fractional inches/pounds accepted -------
-print(patientWeightClassification(5, 11.5, 12, 6.5))      # expect: valid classification
-
-# ------- Extreme but valid inputs -------
-print(patientWeightClassification(7, 0, 7.5, 0))          # tall, light → likely underweight/normal
-print(patientWeightClassification(4, 11, 25, 13))         # short, very heavy → likely obese class III
-print(patientWeightClassification(5, 2, 9, 12))         # short, very heavy → likely obese class III
-
-
-#TODO Add an AI declaration for all the test cases

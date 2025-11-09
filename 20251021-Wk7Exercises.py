@@ -181,17 +181,3 @@ def WeightClassification (bmi):
     return classification
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
