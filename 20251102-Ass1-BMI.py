@@ -130,6 +130,8 @@ Question 3: Determining Health Risks Based on BMI
             Print all results in your main program.
 """
 
+
+
 # Below code taken from previous homework:
 # https://github.com/bensanta/CS1205/blob/be101153d4cdc3e8c6a67e099ad7cb4be366089e/20251014-Homework2-Conditionals.py
 def bmiRiskFactor(bmi):
