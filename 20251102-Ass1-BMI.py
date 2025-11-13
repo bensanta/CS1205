@@ -147,7 +147,7 @@ def bmiRiskFactor(bmi):
 
     # these classifications are from the above linked assignment
     if bmi <= 0:
-        return 10004
+        return 10004 #negative bmi OR 0
     elif bmi > 0 and bmi < 18.5:
         classification = "underweight"
         health_problems_risk = "increased"
