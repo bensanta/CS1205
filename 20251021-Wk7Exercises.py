@@ -180,4 +180,36 @@ def WeightClassification (bmi):
 
     return classification
 
+print(WeightClassification(10))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def bmi2(m, kgs):
+    return kgs/m**2
+
+print(bmi2(2,1))
+
+
+
 

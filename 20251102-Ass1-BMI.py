@@ -22,7 +22,6 @@ Question 1: BMI (Body Mass Index) Calculator
             the main program.
 """
 
-# TODO: add error handling return codes
 
 """
 Error codes and meanings:
@@ -33,7 +32,6 @@ Error codes and meanings:
 """
 
 
-# TODO: allow inches over 12, and allow lbs over 14. no reason to complicate further.
 
 def calculateBMI(height, weight):
     # calculate bmi formulae: kg/m^2 - https://www.diabetes.ca/resources/tools-resources/body-mass-index-(bmi)-calculator
@@ -97,16 +95,12 @@ def weightToMetric(stones, pounds):
     if ((stones * 6.35029318) + (pounds / 2.2046226218)) < 0:
         return 10002
 
-    #To counteract the rounding issue
-    # Exact values from https://www.unitconverters.net/weight-and-mass/lbs-to-kg.htm
-    # British Imperial unit of mass:  https://en.wikipedia.org/wiki/Avoirdupois
-    return (stones * 6.35029318) + (pounds / 2.2046226218)
+    return (stones * 6.35) + (pounds / 2.205)
 
-# TODO: the weight conversion as much as possible
 # --- Tests ---
 print("\n-------------\n-------------\nQuestion 2.2: Imperial Weight to Metric Tests")
 
-print(weightToMetric(0, 0)) # expect: 0.0
+print(weightToMetric(0, 0)) # valid: 0.0
 print(weightToMetric(1,-15)) #err
 print(weightToMetric(-1,15)) #valid
 print(weightToMetric(-10,15)) #err
@@ -139,7 +133,7 @@ def bmiRiskFactor(bmi):
     classification = ""
     health_problems_risk = ""
 
-    #ERR Handling
+    #ERR Handling continued if bmi parameter is nested from a prev function
     if bmi == 10001:
         return 10001
     elif bmi == 10002:
@@ -165,11 +159,11 @@ def bmiRiskFactor(bmi):
     elif bmi >= 35 and bmi < 40:
         classification = "obese class II"
         health_problems_risk = "very high"
-    else: #todo: add error codes into here, specific == like bmi == 10001 then height err, etc
+    else:
         classification = "obese class III"
         health_problems_risk = "extremely high"
 
-    # Print an output for the user - using f-string to make it more elegant -
+    # Print an output for the user - using f-string to make it more elegant:
     # https://www.w3schools.com/python/python_string_formatting.asp
     return (f"With a BMI of {round(bmi,2)} you are {classification} with {health_problems_risk} risk of developing "
             f"health problems.")
@@ -240,10 +234,15 @@ def patientWeightClassification (feet, inches, stones, pounds):
         return 10002
 
 
-    # TODO explain how this return works
+    """
+        In the below return, we are converting from imperial scales to metric scales using our previously defined 
+        functions which are heightToMetric() and weightToMetric(). With these 2 conversion functions, we can put
+        them into calculateBMI() which uses metric. Then, we return bmiRiskFactor() with the bmi calculated in it,
+        and we return the formatted classification and risk factor it outputs.
+    """
+
     return bmiRiskFactor(calculateBMI(heightToMetric(feet, inches), weightToMetric(stones, pounds)))
 
-#TODO: test thoroughly - all edge cases, and all fails / errors too.
 
 print("\n-------------\n-------------\nQuestion 4: patientWeightClassification tests")
 
@@ -251,6 +250,7 @@ print("\n-------------\n-------------\nQuestion 4: patientWeightClassification t
 print(patientWeightClassification(-10,10,-3,2))
 print(patientWeightClassification(10,10,-3,2))
 print(patientWeightClassification(-10,10,3,2))
+print(patientWeightClassification(-10,-10,-3,-2))
 
 # Underweight (<18.5)
 print(patientWeightClassification(6, 0, 9.70, 0))         # expect: underweight / increased risk
